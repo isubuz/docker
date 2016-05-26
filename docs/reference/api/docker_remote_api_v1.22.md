@@ -737,11 +737,15 @@ Query Parameters:
 
 -   **follow** – 1/True/true or 0/False/false, return stream. Default `false`.
 -   **stdout** – 1/True/true or 0/False/false, show `stdout` log. Default `false`.
--   **stderr** – 1/True/true or 0/False/false, show `stderr` log. Default `false`.
+-   **stderr** – 1/True/true or 0/False/false, show `stderr` log. Default 
+    `false`. Atleast one of `stderr` or `stdout` must be true.
 -   **since** – UNIX timestamp (integer) to filter logs. Specifying a timestamp
     will only output log-entries since that timestamp. Default: 0 (unfiltered)
 -   **timestamps** – 1/True/true or 0/False/false, print timestamps for
         every log line. Default `false`.
+-   **details** - 1/True/true or 0/False/false, print
+    [attributes](../../admin/logging/overview#configure-logging-drivers) for
+    every log line. Default `false`.
 -   **tail** – Output specified number of lines at the end of logs: `all` or `<number>`. Default all.
 
 Status Codes:
@@ -750,6 +754,20 @@ Status Codes:
 -   **200** – no error, no upgrade header found
 -   **404** – no such container
 -   **500** – server error
+
+Each log line consists of space delimited chunks starting with the timestamp,
+followed by the attributes and then the line from the container's `stderr`
+and/or `stdout` log. The timestamp and additional attributes along with the 
+delimiters are printed only if truth values are passed for the `timestamps` 
+and `details` argument.
+
+Following is a container log output for the `json-file` log driver with the
+additional attributes:
+
+```json
+{"log":"Hello from Docker.\n","stream":"stdout","attrs":{"fizz":"buzz",
+"foo":"bar"},"time":"2016-05-24T19:36:19.524190052Z"}
+```
 
 ### Inspect changes on a container's filesystem
 
